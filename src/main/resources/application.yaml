@@ -1,0 +1,38 @@
+server:
+  port: 8043
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: otp
+          uri: lb://OTP-SERVICE
+          predicates:
+            - Path=/otp/**
+        - id: identity
+          uri: lb://IDENTITY-SERVICE  # Changed to uppercase to match Eureka
+          predicates:
+            - Path=/auth/**
+        - id: email
+          uri: lb://EMAIL-SERVICE  # Changed to uppercase
+          predicates:
+            - Path=/email/**
+#          filters:
+#            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    hostname: 192.168.18.163  # Remove ${} for static IP
+    instance-id: api-gateway:8043  # Use proper placeholders
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
