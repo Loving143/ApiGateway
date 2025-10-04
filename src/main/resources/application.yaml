@@ -1,26 +1,47 @@
 server:
-  port: 8043
+  port: 8043   # Gateway port
 
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true   # Enables Eureka service discovery
+          lower-case-service-id: true
       routes:
         - id: otp
           uri: lb://OTP-SERVICE
           predicates:
             - Path=/otp/**
+#          filters:
+#            - StripPrefix=1   # removes /otp from the path before forwarding
+
         - id: identity
-          uri: lb://IDENTITY-SERVICE  # Changed to uppercase to match Eureka
+          uri: lb://IDENTITY-SERVICE
           predicates:
             - Path=/auth/**
+#          filters:
+#            - StripPrefix=1
+
         - id: email
-          uri: lb://EMAIL-SERVICE  # Changed to uppercase
+          uri: lb://EMAIL-SERVICE
           predicates:
             - Path=/email/**
 #          filters:
 #            - StripPrefix=1
+
+        - id: user-profile
+          uri: lb://USERPROFILE-SERVICE
+          predicates:
+            - Path=/api/user-profiles/**
+#          filters:
+#            - StripPrefix=1
+
+
+
+
 
 eureka:
   client:
