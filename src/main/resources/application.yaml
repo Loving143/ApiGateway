@@ -4,44 +4,56 @@ server:
 spring:
   application:
     name: api-gateway
+
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true   # Enables Eureka service discovery
           lower-case-service-id: true
+
       routes:
         - id: otp
           uri: lb://OTP-SERVICE
           predicates:
             - Path=/otp/**
-#          filters:
-#            - StripPrefix=1   # removes /otp from the path before forwarding
+          # filters:
+          #   - StripPrefix=1
 
         - id: identity
           uri: lb://IDENTITY-SERVICE
           predicates:
             - Path=/auth/**
-#          filters:
-#            - StripPrefix=1
+          # filters:
+          #   - StripPrefix=1
 
         - id: email
           uri: lb://EMAIL-SERVICE
           predicates:
             - Path=/email/**
-#          filters:
-#            - StripPrefix=1
+          # filters:
+          #   - StripPrefix=1
 
         - id: user-profile
           uri: lb://USERPROFILE-SERVICE
           predicates:
             - Path=/api/user-profiles/**
-#          filters:
-#            - StripPrefix=1
+          # filters:
+          #   - StripPrefix=1
 
+        - id: medicine
+          uri: lb://USERPROFILE-SERVICE
+          predicates:
+            - Path=/medicine/**
+          # filters:
+          #   - StripPrefix=1
 
-
-
+        - id: cart
+          uri: lb://CART-SERVICE
+          predicates:
+            - Path=/cart/**
+          # filters:
+          #   - StripPrefix=1
 
 eureka:
   client:
@@ -49,8 +61,8 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     prefer-ip-address: true
-    hostname: 192.168.18.163  # Remove ${} for static IP
-    instance-id: api-gateway:8043  # Use proper placeholders
+    hostname: 192.168.18.163
+    instance-id: api-gateway:8043
 
 management:
   endpoints:
