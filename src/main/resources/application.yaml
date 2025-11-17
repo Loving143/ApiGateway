@@ -1,15 +1,12 @@
 server:
-  port: 8043   # Gateway port
+  port: 8043
 
 spring:
-  application:
-    name: api-gateway
-
   cloud:
     gateway:
       discovery:
         locator:
-          enabled: true   # Enables Eureka service discovery
+          enabled: true
           lower-case-service-id: true
 
       routes:
@@ -17,55 +14,34 @@ spring:
           uri: lb://OTP-SERVICE
           predicates:
             - Path=/otp/**
-          # filters:
-          #   - StripPrefix=1
 
         - id: identity
           uri: lb://IDENTITY-SERVICE
           predicates:
             - Path=/auth/**
-          # filters:
-          #   - StripPrefix=1
 
         - id: email
           uri: lb://EMAIL-SERVICE
           predicates:
             - Path=/email/**
-          # filters:
-          #   - StripPrefix=1
 
         - id: user-profile
           uri: lb://USERPROFILE-SERVICE
           predicates:
             - Path=/api/user-profiles/**
-          # filters:
-          #   - StripPrefix=1
 
         - id: medicine
           uri: lb://USERPROFILE-SERVICE
           predicates:
             - Path=/medicine/**
-          # filters:
-          #   - StripPrefix=1
 
         - id: cart
           uri: lb://CART-SERVICE
           predicates:
             - Path=/cart/**
-          # filters:
-          #   - StripPrefix=1
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
-    hostname: 192.168.18.163
-    instance-id: api-gateway:8043
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,gateway
+        # ✅ Route for Address CRUD
+        - id: address
+          uri: lb://USERPROFILE-SERVICE
+          predicates:
+            - Path=/address/**
